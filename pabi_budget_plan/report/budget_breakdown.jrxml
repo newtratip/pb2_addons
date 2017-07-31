@@ -124,7 +124,9 @@
 				<text><![CDATA[Planned Overall]]></text>
 			</staticText>
 			<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
-				<reportElement mode="Transparent" x="100" y="100" width="132" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement mode="Transparent" x="100" y="100" width="132" height="20" forecolor="#000000" backcolor="#FFFFFF">
+					<property name="net.sf.jasperreports.export.xls.formula" value="SUM(C:C)-SUM(C1:C10)"/>
+				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" lineSpacing="Single" markup="none">
 					<font fontName="Monospaced" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Garuda.ttf" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 				</textElement>
@@ -152,7 +154,9 @@
 				<text><![CDATA[Diff Amount]]></text>
 			</staticText>
 			<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
-				<reportElement mode="Transparent" x="100" y="140" width="132" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<reportElement mode="Transparent" x="100" y="140" width="132" height="20" forecolor="#000000" backcolor="#FFFFFF">
+					<property name="net.sf.jasperreports.export.xls.formula" value="SUM(I:I)-SUM(I1:I10)-D7"/>
+				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" lineSpacing="Single" markup="none">
 					<font fontName="Monospaced" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Garuda.ttf" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 				</textElement>
