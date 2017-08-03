@@ -202,7 +202,7 @@
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" lineSpacing="Single" markup="none">
 					<font fontName="Monospaced" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Garuda.ttf" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 				</textElement>
-				<text><![CDATA[Last Policy Amount]]></text>
+				<text><![CDATA[Latest Policy Amount]]></text>
 			</staticText>
 			<staticText>
 				<reportElement mode="Opaque" x="464" y="180" width="91" height="20" forecolor="#000000" backcolor="#C5C5C5"/>

@@ -6,6 +6,7 @@ IMPORT_ACTION = {
     'model': 'budget.breakdown',
     'header_map': {  # Must be lowercase
         'id': 'id',
+        'name': 'name',
         'org': 'org_id',
         'fiscal year': 'fiscalyear_id',
         'revision': 'revision',
@@ -18,7 +19,6 @@ IMPORT_ACTION = {
         'rolling': 'unit_base_line_ids/rolling',
         'latest policy amount': 'unit_base_line_ids/latest_policy_amount',
         'policy amount': 'unit_base_line_ids/policy_amount',
-        'budget policy line': 'policy_line_id'
     },
     'extra_columns': [],
 }
@@ -40,7 +40,6 @@ class BudgetBreakdownActionExcelImportWizard(models.TransientModel):
         model = IMPORT_ACTION['model']
         header_map = IMPORT_ACTION.get('header_map', False)
         extra_columns = IMPORT_ACTION.get('extra_columns', False)
-        xml_ids = self.env['pabi.xls'].import_xls(model, self.import_file,
-                                                  header_map=header_map,
-                                                  extra_columns=extra_columns)
-        return True
+        return self.env['pabi.xls'].import_xls(model, self.import_file,
+                                               header_map=header_map,
+                                               extra_columns=extra_columns)
