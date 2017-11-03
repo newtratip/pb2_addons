@@ -17,6 +17,7 @@
         "account",
     ],
     "data": [
+        "wizards/pabi_long_term_investment_report_wizard.xml",
         "views/res_partner_view.xml",
     ],
     "demo": [
