@@ -21,7 +21,6 @@ class AutoApproveInvestConstruction(models.Model):
                 rec.action_approve()
             except Exception:
                 invest_construction_ids.append(rec.id)
-                pass
 
         # Return project as not pass
         action = self.env.ref('pabi_invest_construction.'
