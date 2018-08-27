@@ -32,32 +32,43 @@ connection.check_login()
 po_model = connection.get_model('purchase.order')
 
 # domain follow state
-dom = [('order_type', '=', 'purchase_order'), ('state', '=', 'draft')]
+# dom = [('order_type', '=', 'purchase_order'), ('state', '=', 'draft')]
 
 # domain follow purchase id
-# dom = [('order_type', '=', 'purchase_order'),
-#        ('id', 'in', [1200])]
+# po_ids = [1200]
+# dom = [('id', 'in', po_ids)]
+
+# domain follow purchase name
+po_names = ['PO18001162']
+dom = [('name', 'in', po_names)]
 
 # Search puchase by domain as defined
 pos = po_model.search_read(dom)
 
 pass_po_ids, pass_po_names = [], []
 error_po_ids, error_po_names = [], []
+print ":: Start process ::"
+print "Total purchase order : %s" % len(pos)
+print "Status  PO Name"
 for po in pos:
     try:
         po_model.signal_workflow([po['id']], 'purchase_confirm')
         pass_po_ids.append(po['id'])
-        pass_po_names.append(po['name'])
+        pass_po_names.append(po['name'].encode('utf-8'))
+        print "Pass : %s" % po['name']
     except Exception:
         error_po_ids.append(po['id'])
-        error_po_names.append(po['name'])
+        error_po_names.append(po['name'].encode('utf-8'))
+        print "Fail : %s" % po['name']
 
-# Show purchase order pass and fail
+# Summary pass and fail po
+summary = "\nSummary\nPass : %s" % len(pass_po_ids)
 if pass_po_ids:
-    print "=============== Pass ==============="
-    print pass_po_ids  # Use for search po id in database
-    print pass_po_names  # Use for see number of purchase order as pass
+    summary += "\npo ids : \n%s\npo names : \n%s" \
+               % (pass_po_ids, pass_po_names)
+summary += "\nFail : %s" % len(error_po_ids)
 if error_po_ids:
-    print "=============== Fail ==============="
-    print error_po_ids  # Use for search po id in database
-    print error_po_names  # Use for see number of purchase order as fail
+    summary += "\npo ids : \n%s\npo names : \n%s" \
+               % (error_po_ids, error_po_names)
+print summary
+print ":: End process ::"
