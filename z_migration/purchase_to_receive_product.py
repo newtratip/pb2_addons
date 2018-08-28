@@ -33,6 +33,8 @@ po_model = connection.get_model('purchase.order')
 picking_model = connection.get_model('stock.picking')
 acceptance_model = connection.get_model('purchase.work.acceptance')
 transfer_details_model = connection.get_model('stock.transfer_details')
+group_model = connection.get_model('procurement.group')
+data_model = connection.get_model('ir.model.data')
 
 # domain follow state
 # dom = [('order_type', '=', 'purchase_order'), ('state', '=', 'approved')]
@@ -42,7 +44,7 @@ transfer_details_model = connection.get_model('stock.transfer_details')
 # dom = [('id', 'in', po_ids)]
 
 # domain follow purchase name
-po_names = ['PO18001162']
+po_names = ['PO18001165']
 dom = [('name', 'in', po_names)]
 
 # Search puchase by domain as defined
@@ -55,7 +57,18 @@ print "Total purchase order : %s" % len(pos)
 print "Status  PO Name"
 for po in pos:
     try:
-        for picking_id in po['picking_ids']:
+        cod_pay_term_id = data_model.get_object_reference(
+            'purchase_cash_on_delivery', 'cash_on_delivery_payment_term')[1]
+        if po['invoice_method'] == 'order' and \
+           po['payment_term_id'][0] == cod_pay_term_id:
+            if not po['invoiced'] or \
+                False in [x.state == 'paid' and True or False
+                          for x in po['invoice_ids']]:
+                x = 1/0
+        # --
+        group_ids = group_model.search([('name', '=', po['name'])])
+        picking_ids = picking_model.search([('group_id', 'in', group_ids)])
+        for picking_id in picking_ids:
             picking = picking_model.search_read(
                 [('id', '=', picking_id)])[0]
             # Save Work Acceptance
