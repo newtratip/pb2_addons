@@ -47,7 +47,6 @@ summary = 'Summary: pass %s%s and fail %s%s' \
              log_budget_names[1] and ' %s' % str(tuple(log_budget_names[1]))
              or '')
 logger.info(summary)
-logger.info('End process')
 
 # End date
 date_end = datetime.datetime.now().replace(microsecond=0)
@@ -56,3 +55,4 @@ date_end = datetime.datetime.now().replace(microsecond=0)
 logger.info('Start time %s' % date_start)
 logger.info('End time %s' % date_end)
 logger.info('Total used time %s' % (date_end - date_start))
+logger.info('End process')
