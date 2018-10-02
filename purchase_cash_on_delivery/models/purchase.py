@@ -27,6 +27,15 @@ class PurchaseOrder(models.Model):
         if self.payment_term_id.id == cod_pay_term.id:
             self.invoice_method = 'order'
 
+    @api.onchange('payment_term_id')
+    def _onchange_payment_term(self):
+        cod_pay_term = self.env.ref('purchase_cash_on_delivery.'
+                                    'cash_on_delivery_payment_term')
+        if self.payment_term_id.id != cod_pay_term.id:
+            default_invoice_method = self.env['ir.values'].get_default(
+                'purchase.order', 'invoice_method')
+            self.invoice_method = default_invoice_method or 'picking'
+
     @api.multi
     @api.constrains('payment_term_id', 'invoice_method')
     def _check_cash_on_delivery(self):
