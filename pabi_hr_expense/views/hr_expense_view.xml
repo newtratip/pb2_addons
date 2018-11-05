@@ -203,6 +203,7 @@
 				<xpath expr="//button[@name='%(hr_expense_cancel_reason.action_hr_expense_cancel)d']" position="attributes">
 					<attribute name="string">Reject</attribute>
 					<attribute name="states">confirm,accepted</attribute>
+					<attribute name="groups">base.group_hr_user,pabi_budget_internal_charge.group_approve_ic_activity</attribute>
 				</xpath>
 			</field>
 		</record>

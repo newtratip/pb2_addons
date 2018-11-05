@@ -16,6 +16,9 @@ class HRExpenseCancel(models.TransientModel):
 
     @api.one
     def confirm_cancel(self):
+        # call method confirm_cancel with superuser
+        self = self.sudo()
+        # --
         act_close = {'type': 'ir.actions.act_window_close'}
         expense_ids = self._context.get('active_ids')
         if expense_ids is None:
