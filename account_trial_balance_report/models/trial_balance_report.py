@@ -38,16 +38,22 @@ class AccountTrailBalanceReport(models.Model):
         'report_id',
         string='Details'
     )
+    charge_type = fields.Selection(
+        [('internal', 'Internal'),
+         ('external', 'External')],
+        string='Charge Type',
+    )
 
     @api.model
     def _get_moves(self, fiscalyear_id, date_start, date_stop,
-                   target_move, with_movement):
+                   target_move, with_movement, charge_type):
         Account = self.env['account.account']
         Move = self.env['account.move.line']
         accounts = []
         # All moves, begin of this year until date_stop
         domain = [('period_id.fiscalyear_id', '=', fiscalyear_id),
-                  ('date', '<=', date_stop)]
+                  ('date', '<=', date_stop),
+                  ('charge_type', '=', charge_type)]
         if target_move == 'posted':
             domain.append(('move_id.state', '=', 'posted'))
         moves = Move.search(domain)
@@ -91,7 +97,7 @@ class AccountTrailBalanceReport(models.Model):
 
     @api.model
     def generate_report(self, fiscalyear_id, date_start, date_stop,
-                        target_move, with_movement):
+                        target_move, with_movement, charge_type):
         # Delete old reports
         self.search(
             [('create_uid', '=', self.env.user.id),
@@ -105,11 +111,13 @@ class AccountTrailBalanceReport(models.Model):
                               'date_start': date_start,
                               'date_stop': date_stop,
                               'target_move': target_move,
-                              'with_movement': with_movement})
+                              'with_movement': with_movement,
+                              'charge_type': charge_type})
 
         # Compute report lines
         accounts, moves = self._get_moves(fiscalyear_id, date_start, date_stop,
-                                          target_move, with_movement)
+                                          target_move, with_movement,
+                                          charge_type)
 
         report_lines = []
 
@@ -213,7 +221,8 @@ class AccountTrailBalanceLine(models.Model):
         rpt = self.report_id
         _x, moves = TB._get_moves(rpt.fiscalyear_id.id,
                                   rpt.date_start, rpt.date_stop,
-                                  rpt.target_move, rpt.with_movement)
+                                  rpt.target_move, rpt.with_movement,
+                                  rpt.charge_type)
         move_ids = []
         if move_type == 'debit':
             moves = TB._get_focus_moves(rpt, self.account_id, rpt.target_move)
@@ -245,5 +254,6 @@ class AccountTrailBalanceLine(models.Model):
             'type': 'ir.actions.act_window',
             'context': self._context,
             'nodestroy': True,
-            'domain': [('id', 'in', move_ids)],
+            'domain': [('id', 'in', move_ids),
+                       ('charge_type', '=', rpt.charge_type)],
         }
